@@ -11,7 +11,7 @@ PORT: int = int(os.environ.get('RABBITMQ_PORT', '5672'))
 USER: str = os.environ.get('RABBITMQ_USER', 'guest')
 PASSWORD: str = os.environ.get('RABBITMQ_PASSWORD', 'guest')
 PASSWORD_SSM: str = os.environ.get('RABBITMQ_PASSWORD_SSM')
-SSL_OPTIONS = pika.SSLOptions(context=ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT))
+SSL_OPTIONS = pika.SSLOptions(context=ssl.SSLContext(ssl.PROTOCOL_TLSv1_2))
 PARAMS = pika.ConnectionParameters(
     host=HOST,
     port=PORT,
@@ -22,25 +22,22 @@ AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 SSM_CLIENT = boto3.client('ssm', region_name=AWS_REGION)
 
 
-def handler(event: dict, __) -> None:
+def handler(event: dict, __) -> str:
     # if PASSWORD_SSM:
     #     response = SSM_CLIENT.get_parameter(Name=PASSWORD_SSM,WithDecryption=True)
     #     password = response.get('Parameter', {}).get('Value')
 
-    queue = event.get('queue')
+    exchange = event.get('exchange', '')
     routing_key = event.get('routing_key')
-    exchange = event.get('exchange')
     body = event.get('body')
+    if not routing_key or not body:
+        return 'body and routing_key is required'
 
-    logging.info("Connecting to RabbitMQ host: %s:%s", HOST, PORT)
+    logging.info('Connecting to RabbitMQ host: %s:%s', HOST, PORT)
     connection = pika.BlockingConnection(PARAMS)
     channel = connection.channel()
 
-    if queue:
-        logging.info("creating queue if not exists: %s", queue)
-        channel.queue_declare(queue=queue)
-
-    logging.info("publishing message to %s", queue)
+    logging.info('publishing message: exchange:"%s" routing key:"%s"', exchange, routing_key)
     channel.basic_publish(
         exchange=exchange,
         routing_key=routing_key,
@@ -50,5 +47,6 @@ def handler(event: dict, __) -> None:
 
 if __name__ == '__main__':
     handler({
-        'queue': 'test-queue'
+        'routing_key': 'test-queue',
+        'body': 'Hello World!',
     }, None)
