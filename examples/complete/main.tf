@@ -37,6 +37,7 @@ module "rabbit" {
   cidr_allow_list          = ["10.0.0.0/8"]
   use_aws_owned_key        = true
   apply_immediately        = true
+  engine_version           = "3.12.13"
 }
 
 module "this" {
