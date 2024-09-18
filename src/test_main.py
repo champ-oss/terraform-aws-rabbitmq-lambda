@@ -11,7 +11,6 @@ from pika.credentials import PlainCredentials
 class Test(TestCase):
 
     test_event = {
-        'queue': 'test-queue',
         'routing_key': 'test-routing',
         'exchange': 'test-exchange',
         'body': 'test-body'
@@ -33,9 +32,6 @@ class Test(TestCase):
                 ssl_options=None)
         )
 
-        mock_pika_blocking_connection.return_value.channel.return_value.queue_declare.assert_called_with(
-            queue='test-queue')
-
         mock_pika_blocking_connection.return_value.channel.return_value.basic_publish.assert_called_with(
             exchange='test-exchange',
             routing_key='test-routing',
@@ -47,12 +43,21 @@ class Test(TestCase):
         os.environ['RABBITMQ_PORT'] = '5671'
         import main
         reload(main)
-        main.handler({'queue': 'test-queue'}, None)
+        main.handler(self.test_event, None)
 
         mock_pika_blocking_connection.assert_called_with(
             ConnectionParameters(
                 host='localhost',
                 port=5671,
                 credentials=PlainCredentials('guest', 'guest'),
-                ssl_options=SSLOptions(context=ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)))
+                ssl_options=SSLOptions(context=ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)))
         )
+
+    @patch('main.boto3.client')
+    @patch('main.pika.BlockingConnection')
+    def test_handler_with_missing_values(self, mock_pika_blocking_connection, boto3_client):
+        os.environ['RABBITMQ_PORT'] = '5671'
+        import main
+        reload(main)
+        result = main.handler({}, None)
+        assert result == 'body and routing_key is required'
