@@ -5,10 +5,10 @@ import ssl
 
 logging.basicConfig(level=logging.INFO)
 
-HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
-PORT = os.environ.get('RABBITMQ_PORT', 5672)
-USER = os.environ.get('RABBITMQ_USER', 'guest')
-PASSWORD = os.environ.get('RABBITMQ_PASSWORD', 'guest')
+HOST: str = os.environ.get('RABBITMQ_HOST', 'localhost')
+PORT: int = int(os.environ.get('RABBITMQ_PORT', '5672'))
+USER: str = os.environ.get('RABBITMQ_USER', 'guest')
+PASSWORD: str = os.environ.get('RABBITMQ_PASSWORD', 'guest')
 SSL_OPTIONS = pika.SSLOptions(context=ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT))
 PARAMS = pika.ConnectionParameters(
     host=HOST,
@@ -41,4 +41,6 @@ def handler(event: dict, __) -> None:
 
 
 if __name__ == '__main__':
-    handler({'queue': 'test-queue'}, None)
+    handler({
+        'queue': 'test-queue'
+    }, None)
