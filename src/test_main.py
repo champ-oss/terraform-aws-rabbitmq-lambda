@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from pika.connection import ConnectionParameters, SSLOptions
 from pika.credentials import PlainCredentials
-from src import main
 
 
 class Test(TestCase):
@@ -18,9 +17,11 @@ class Test(TestCase):
         'body': 'test-body'
     }
 
+    @patch('main.boto3.client')
     @patch('main.pika.BlockingConnection')
-    def test_handler_for_localhost(self, mock_pika_blocking_connection):
+    def test_handler_for_localhost(self, mock_pika_blocking_connection, boto3_client):
         os.environ.clear()
+        import main
         reload(main)
         main.handler(self.test_event, None)
 
@@ -40,9 +41,11 @@ class Test(TestCase):
             routing_key='test-routing',
             body='test-body')
 
+    @patch('main.boto3.client')
     @patch('main.pika.BlockingConnection')
-    def test_handler_with_ssl_enabled(self, mock_pika_blocking_connection):
+    def test_handler_with_ssl_enabled(self, mock_pika_blocking_connection, boto3_client):
         os.environ['RABBITMQ_PORT'] = '5671'
+        import main
         reload(main)
         main.handler({'queue': 'test-queue'}, None)
 

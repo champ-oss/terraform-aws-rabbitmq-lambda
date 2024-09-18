@@ -26,6 +26,28 @@ variable "reserved_concurrent_executions" {
   default     = 1
 }
 
+variable "rabbitmq_host" {
+  description = "RabbitMQ DNS hostname"
+  type        = string
+}
+
+variable "rabbitmq_port" {
+  description = "RabbitMQ port"
+  type        = string
+  default     = "5671"
+}
+
+variable "rabbitmq_user" {
+  description = "RabbitMQ username"
+  type        = string
+  default     = "mqadminuser"
+}
+
+variable "rabbitmq_password_ssm" {
+  description = "SSM parameter name containing the RabbitMQ password"
+  type        = string
+}
+
 variable "runtime" {
   description = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
   type        = string

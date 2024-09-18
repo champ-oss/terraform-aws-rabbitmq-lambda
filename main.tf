@@ -37,6 +37,9 @@ module "this" {
   source_code_hash               = data.archive_file.this[0].output_base64sha256
   reserved_concurrent_executions = var.reserved_concurrent_executions
   environment = {
-    "FOO" = "BAR"
+    RABBITMQ_HOST         = var.rabbitmq_host
+    RABBITMQ_PORT         = var.rabbitmq_port
+    RABBITMQ_USER         = var.rabbitmq_user
+    RABBITMQ_PASSWORD_SSM = var.rabbitmq_password_ssm
   }
 }

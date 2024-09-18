@@ -1,4 +1,5 @@
 install:
+	pip install boto3
 	cd src && pip install -r requirements.txt -t .
 
 test:
