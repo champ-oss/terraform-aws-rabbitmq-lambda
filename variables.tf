@@ -9,6 +9,12 @@ variable "git" {
   type        = string
 }
 
+variable "memory_size" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#memory_size"
+  type        = number
+  default     = 128
+}
+
 variable "private_subnet_ids" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group#subnet_ids"
   type        = list(string)

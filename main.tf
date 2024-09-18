@@ -29,6 +29,10 @@ module "this" {
   tags                           = merge(local.tags, var.tags)
   runtime                        = var.runtime
   handler                        = "main.handler"
+  memory_size                    = var.memory_size
+  enable_vpc                     = true
+  vpc_id                         = var.vpc_id
+  private_subnet_ids             = var.private_subnet_ids
   filename                       = data.archive_file.this[0].output_path
   source_code_hash               = data.archive_file.this[0].output_base64sha256
   reserved_concurrent_executions = var.reserved_concurrent_executions
