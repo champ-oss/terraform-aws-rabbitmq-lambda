@@ -1,6 +1,16 @@
+output "arn" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#arn"
+  value       = try(module.this[0].arn)
+}
+
 output "aws_region" {
   description = "AWS region name"
   value       = data.aws_region.this.name
+}
+
+output "function_name" {
+  description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#function_name"
+  value       = try(module.this[0].function_name)
 }
 
 output "private_subnet_ids" {

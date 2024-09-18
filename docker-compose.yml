@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  rabbitmq-management:
+    image: docker.io/rabbitmq:3-management
+    restart: unless-stopped
+    init: true
+    hostname: local-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
