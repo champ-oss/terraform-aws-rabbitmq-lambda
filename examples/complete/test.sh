@@ -1,5 +1,10 @@
 set -e
 
-aws lambda invoke --function-name $FUNCTION_NAME --payload '{"key1":"value1", "key2":"value2", "key3":"value3"}' response.json
+aws lambda invoke \
+    --cli-binary-format raw-in-base64-out \
+    --function-name $FUNCTION_NAME \
+    --cli-binary-format raw-in-base64-out \
+    --payload '{"routing_key":"test","body":"test"}' \
+    response.json
 
 cat response.json

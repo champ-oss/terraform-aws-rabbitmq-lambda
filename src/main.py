@@ -1,4 +1,3 @@
-import logging
 import os
 import ssl
 
@@ -6,8 +5,6 @@ import boto3
 
 import pika
 from pika.channel import Channel
-
-logging.basicConfig(level=logging.INFO)
 
 HOST: str = os.environ.get('RABBITMQ_HOST', 'localhost')
 PORT: int = int(os.environ.get('RABBITMQ_PORT', '5672'))
@@ -26,7 +23,7 @@ def handler(event: dict, __) -> str:
     if not routing_key or not body:
         return 'body and routing_key is required'
 
-    logging.info('publishing message: exchange:"%s" routing key:"%s"', exchange, routing_key)
+    print(f'publishing message: exchange:"{exchange}" routing key:"{routing_key}"')
     channel = _get_channel()
     channel.basic_publish(
         exchange=exchange,
@@ -35,7 +32,7 @@ def handler(event: dict, __) -> str:
 
 
 def _get_channel() -> Channel:
-    logging.info('Connecting to RabbitMQ host: %s:%s', HOST, PORT)
+    print(f'Connecting to RabbitMQ host: {HOST}:{PORT}')
     connection = pika.BlockingConnection(pika.ConnectionParameters(
         host=HOST,
         port=PORT,
@@ -48,7 +45,7 @@ def _get_channel() -> Channel:
 def _get_password() -> str:
     if not PASSWORD_SSM:
         return PASSWORD
-    logging.info('loading password from SSM parameter:%s', PASSWORD_SSM)
+    print(f'loading password from SSM parameter:{PASSWORD_SSM}')
     response = SSM_CLIENT.get_parameter(Name=PASSWORD_SSM, WithDecryption=True)
     return response.get('Parameter', {}).get('Value')
 

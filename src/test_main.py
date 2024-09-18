@@ -40,6 +40,7 @@ class Test(TestCase):
     @patch('main.boto3.client')
     @patch('main.pika.BlockingConnection')
     def test_handler_with_ssl_enabled(self, mock_pika_blocking_connection, boto3_client):
+        os.environ.clear()
         os.environ['RABBITMQ_PORT'] = '5671'
         import main
         reload(main)
@@ -56,8 +57,19 @@ class Test(TestCase):
     @patch('main.boto3.client')
     @patch('main.pika.BlockingConnection')
     def test_handler_with_missing_values(self, mock_pika_blocking_connection, boto3_client):
+        os.environ.clear()
         os.environ['RABBITMQ_PORT'] = '5671'
         import main
         reload(main)
         result = main.handler({}, None)
         assert result == 'body and routing_key is required'
+
+    @patch('main.boto3.client')
+    @patch('main.pika.BlockingConnection')
+    def test_handler_with_ssm_password(self, mock_pika_blocking_connection, boto3_client):
+        os.environ.clear()
+        os.environ['RABBITMQ_PASSWORD_SSM'] = 'test-ssm'
+        import main
+        reload(main)
+        main.handler(self.test_event, None)
+        boto3_client.return_value.get_parameter.assert_called_with(Name='test-ssm', WithDecryption=True)
