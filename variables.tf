@@ -48,12 +48,6 @@ variable "rabbitmq_password_ssm" {
   type        = string
 }
 
-variable "runtime" {
-  description = "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
-  type        = string
-  default     = "python3.12"
-}
-
 variable "tags" {
   description = "Map of tags to assign to resources"
   type        = map(string)

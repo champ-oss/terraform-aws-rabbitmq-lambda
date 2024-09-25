@@ -26,8 +26,6 @@ module "this" {
   git                            = var.git
   name                           = "rabbitmq-lambda"
   tags                           = merge(local.tags, var.tags)
-  runtime                        = var.runtime
-  handler                        = "main.handler"
   memory_size                    = var.memory_size
   enable_vpc                     = true
   vpc_id                         = var.vpc_id
