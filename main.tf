@@ -13,12 +13,11 @@ resource "random_id" "this" {
   byte_length = 3
 }
 
-data "archive_file" "this" {
-  count            = var.enabled ? 1 : 0
-  type             = "zip"
-  output_file_mode = "0666"
-  source_dir       = "${path.module}/src"
-  output_path      = "${path.module}/package.zip"
+module "hash" {
+  count    = var.enabled ? 1 : 0
+  source   = "github.com/champ-oss/terraform-git-hash.git?ref=v1.0.15-cd75e35"
+  path     = path.module
+  fallback = ""
 }
 
 module "this" {
@@ -33,8 +32,10 @@ module "this" {
   enable_vpc                     = true
   vpc_id                         = var.vpc_id
   private_subnet_ids             = var.private_subnet_ids
-  filename                       = data.archive_file.this[0].output_path
-  source_code_hash               = data.archive_file.this[0].output_base64sha256
+  sync_image                     = true
+  sync_source_repo               = "champtitles/terraform-aws-rabbitmq-lambda"
+  ecr_name                       = "terraform-aws-rabbitmq-lambda"
+  ecr_tag                        = module.hash[0].hash
   reserved_concurrent_executions = var.reserved_concurrent_executions
   environment = {
     RABBITMQ_HOST         = var.rabbitmq_host
