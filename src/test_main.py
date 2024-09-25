@@ -2,7 +2,7 @@
 import os
 import ssl
 from importlib import reload
-from typing import Self
+from typing_extensions import Self
 from unittest import TestCase
 from unittest.mock import patch, Mock
 
@@ -18,6 +18,7 @@ class Test(TestCase):
         'exchange': 'test-exchange',
         'body': 'test-body'
     }
+    mock_context = Mock()
 
     @patch('main.boto3.client')
     @patch('main.pika.BlockingConnection')
@@ -26,7 +27,7 @@ class Test(TestCase):
         os.environ.clear()
         import main
         reload(main)
-        main.handler(self.test_event, None)
+        main.handler(self.test_event, self.mock_context)
 
         mock_pika_blocking_connection.assert_called_with(
             ConnectionParameters(
@@ -51,7 +52,7 @@ class Test(TestCase):
         os.environ['RABBITMQ_PORT'] = '5671'
         import main
         reload(main)
-        main.handler(self.test_event, None)
+        main.handler(self.test_event, self.mock_context)
 
         mock_pika_blocking_connection.assert_called_with(
             ConnectionParameters(
@@ -70,7 +71,7 @@ class Test(TestCase):
         os.environ['RABBITMQ_PORT'] = '5671'
         import main
         reload(main)
-        result = main.handler({}, None)
+        result = main.handler({}, self.mock_context)
         assert result == 'body and routing_key is required'
 
     @patch('main.boto3.client')
@@ -81,5 +82,5 @@ class Test(TestCase):
         os.environ['RABBITMQ_PASSWORD_SSM'] = 'test-ssm'
         import main
         reload(main)
-        main.handler(self.test_event, None)
+        main.handler(self.test_event, self.mock_context)
         boto3_client.return_value.get_parameter.assert_called_with(Name='test-ssm', WithDecryption=True)
