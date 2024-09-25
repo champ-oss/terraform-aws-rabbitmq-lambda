@@ -1,3 +1,4 @@
+"""Publishes a message to RabbitMQ."""
 import os
 import ssl
 
@@ -16,7 +17,12 @@ AWS_REGION = os.environ.get('AWS_REGION', 'us-east-1')
 SSM_CLIENT = boto3.client('ssm', region_name=AWS_REGION)
 
 
-def handler(event: dict, __) -> str:
+def handler(event: dict, __: None) -> str:
+    """
+    Handle the main execution of the script.
+
+    :return: None
+    """
     exchange = event.get('exchange', '')
     routing_key = event.get('routing_key')
     body = event.get('body')
@@ -25,10 +31,8 @@ def handler(event: dict, __) -> str:
 
     print(f'publishing message: exchange:"{exchange}" routing key:"{routing_key}"')
     channel = _get_channel()
-    channel.basic_publish(
-        exchange=exchange,
-        routing_key=routing_key,
-        body=body)
+    channel.basic_publish(exchange=exchange, routing_key=routing_key, body=body)
+    return 'Message published'
 
 
 def _get_channel() -> Channel:
@@ -51,7 +55,4 @@ def _get_password() -> str:
 
 
 if __name__ == '__main__':
-    handler({
-        'routing_key': 'test-queue',
-        'body': 'Hello World!',
-    }, None)
+    handler({'routing_key': 'test-queue', 'body': 'Hello World!'}, None)
