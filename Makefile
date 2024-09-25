@@ -11,3 +11,7 @@ test:
 lint:
 	pip install flake8
 	cd src && flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
+
+docker:
+	docker build -t terraform-aws-rabbitmq-lambda .
+	docker run -it terraform-aws-rabbitmq-lambda
