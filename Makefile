@@ -15,3 +15,14 @@ lint:
 docker:
 	docker build -t terraform-aws-rabbitmq-lambda .
 	docker run -it terraform-aws-rabbitmq-lambda
+
+coverage:
+	coverage run -m pytest
+	coverage html --omit="test_*.py"
+	coverage xml --omit="test_*.py"
+	open htmlcov/index.html || true
+
+check-coverage:
+	coverage run -m pytest
+	coverage xml --omit="test_*.py"
+	coverage report --fail-under=80
