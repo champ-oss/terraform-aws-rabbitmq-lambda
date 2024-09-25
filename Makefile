@@ -1,6 +1,8 @@
 install:
-	pip install boto3
-	cd src && pip install -r requirements.txt -t .
+	cd src && pip install -r requirements.txt
+
+freeze:
+	cd src && pip freeze > requirements.txt
 
 test:
 	pip install coverage pytest
@@ -8,4 +10,4 @@ test:
 
 lint:
 	pip install flake8
-	cd src && flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude pika
+	cd src && flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
