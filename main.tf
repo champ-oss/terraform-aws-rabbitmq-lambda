@@ -22,7 +22,7 @@ module "hash" {
 
 module "this" {
   count                          = var.enabled ? 1 : 0
-  source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.143-ad06349"
+  source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.147-dd45619"
   git                            = var.git
   name                           = "rabbitmq-lambda"
   tags                           = merge(local.tags, var.tags)
