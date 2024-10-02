@@ -11,7 +11,6 @@ data "aws_region" "this" {
 }
 
 resource "random_id" "this" {
-  count       = var.enabled ? 1 : 0
   byte_length = 3
 }
 
