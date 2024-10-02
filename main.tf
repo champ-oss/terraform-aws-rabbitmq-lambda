@@ -6,7 +6,9 @@ locals {
   }
 }
 
-data "aws_region" "this" {}
+data "aws_region" "this" {
+  count = var.enabled ? 1 : 0
+}
 
 resource "random_id" "this" {
   count       = var.enabled ? 1 : 0
@@ -21,8 +23,8 @@ module "hash" {
 }
 
 module "this" {
-  count                          = var.enabled ? 1 : 0
   source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.147-dd45619"
+  enabled                        = var.enabled
   git                            = var.git
   name                           = "rabbitmq-lambda"
   tags                           = merge(local.tags, var.tags)

@@ -1,24 +1,24 @@
 output "arn" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#arn"
-  value       = try(module.this[0].arn)
+  value       = var.enabled ? module.this[0].arn : ""
 }
 
 output "aws_region" {
   description = "AWS region name"
-  value       = data.aws_region.this.name
+  value       = var.enabled ? data.aws_region.this[0].name : ""
 }
 
 output "function_name" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#function_name"
-  value       = try(module.this[0].function_name)
+  value       = var.enabled ? module.this[0].function_name : ""
 }
 
 output "private_subnet_ids" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group#subnet_ids"
-  value       = var.private_subnet_ids
+  value       = var.enabled ? var.private_subnet_ids : []
 }
 
 output "vpc_id" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#vpc_id"
-  value       = var.vpc_id
+  value       = var.enabled ? var.vpc_id : ""
 }
