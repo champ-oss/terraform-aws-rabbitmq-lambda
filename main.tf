@@ -32,7 +32,7 @@ module "this" {
   private_subnet_ids             = var.private_subnet_ids
   sync_image                     = true
   sync_source_repo               = "champtitles/terraform-aws-rabbitmq-lambda"
-  ecr_name                       = "terraform-aws-rabbitmq-lambda-${random_id.this[0].hex}"
+  ecr_name                       = "terraform-aws-rabbitmq-lambda-${random_id.this.hex}"
   ecr_tag                        = module.hash.hash
   reserved_concurrent_executions = var.reserved_concurrent_executions
   environment = {
