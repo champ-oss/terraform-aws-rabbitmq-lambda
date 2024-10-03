@@ -58,7 +58,7 @@ module "this" {
 
 output "function_name" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#function_name"
-  value       = module.this.function_name
+  value       = var.enabled ? module.this.function_name : ""
 }
 
 output "enabled" {
