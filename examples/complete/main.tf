@@ -29,7 +29,7 @@ resource "aws_security_group" "rabbit" {
 variable "enabled" {
   description = "module enabled"
   type        = bool
-  default     = false
+  default     = true
 }
 
 module "rabbit" {
@@ -50,6 +50,7 @@ module "rabbit" {
 
 module "this" {
   source                = "../../"
+  enabled               = var.enabled
   git                   = local.git
   private_subnet_ids    = data.aws_subnets.this.ids
   vpc_id                = data.aws_vpcs.this.ids[0]
