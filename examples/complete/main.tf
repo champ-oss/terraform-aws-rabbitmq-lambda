@@ -37,7 +37,7 @@ module "rabbit" {
   enabled                  = var.enabled
   git                      = local.git
   vpc_id                   = data.aws_vpcs.this.ids[0]
-  source_security_group_id = aws_security_group.rabbit[0].id
+  source_security_group_id = try(aws_security_group.rabbit[0].id, "")
   subnet_ids               = [data.aws_subnets.this.ids[0]]
   deployment_mode          = "SINGLE_INSTANCE"
   host_instance_type       = "mq.t3.micro"
