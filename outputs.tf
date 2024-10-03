@@ -1,6 +1,6 @@
 output "arn" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#arn"
-  value       = var.enabled ? module.this[0].arn : ""
+  value       = var.enabled ? module.this.arn : ""
 }
 
 output "aws_region" {
