@@ -21,15 +21,23 @@ data "aws_subnets" "this" {
 }
 
 resource "aws_security_group" "rabbit" {
+  count       = var.enabled ? 1 : 0
   name_prefix = "test-mq-"
   vpc_id      = data.aws_vpcs.this.ids[0]
 }
 
+variable "enabled" {
+  description = "module enabled"
+  type        = bool
+  default     = true
+}
+
 module "rabbit" {
   source                   = "github.com/champ-oss/terraform-aws-mq.git?ref=v1.0.65-8ede199"
+  enabled                  = var.enabled
   git                      = local.git
   vpc_id                   = data.aws_vpcs.this.ids[0]
-  source_security_group_id = aws_security_group.rabbit.id
+  source_security_group_id = try(aws_security_group.rabbit[0].id, "")
   subnet_ids               = [data.aws_subnets.this.ids[0]]
   deployment_mode          = "SINGLE_INSTANCE"
   host_instance_type       = "mq.t3.micro"
@@ -42,6 +50,7 @@ module "rabbit" {
 
 module "this" {
   source                = "../../"
+  enabled               = var.enabled
   git                   = local.git
   private_subnet_ids    = data.aws_subnets.this.ids
   vpc_id                = data.aws_vpcs.this.ids[0]
@@ -51,5 +60,10 @@ module "this" {
 
 output "function_name" {
   description = "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function#function_name"
-  value       = module.this.function_name
+  value       = var.enabled ? module.this.function_name : ""
+}
+
+output "enabled" {
+  description = "module enabled"
+  value       = var.enabled
 }

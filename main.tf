@@ -6,7 +6,9 @@ locals {
   }
 }
 
-data "aws_region" "this" {}
+data "aws_region" "this" {
+  count = var.enabled ? 1 : 0
+}
 
 resource "random_id" "this" {
   count       = var.enabled ? 1 : 0
@@ -14,15 +16,14 @@ resource "random_id" "this" {
 }
 
 module "hash" {
-  count    = var.enabled ? 1 : 0
   source   = "github.com/champ-oss/terraform-git-hash.git?ref=v1.0.15-cd75e35"
   path     = path.module
   fallback = ""
 }
 
 module "this" {
-  count                          = var.enabled ? 1 : 0
   source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.147-dd45619"
+  enabled                        = var.enabled
   git                            = var.git
   name                           = "rabbitmq-lambda"
   tags                           = merge(local.tags, var.tags)
@@ -32,8 +33,8 @@ module "this" {
   private_subnet_ids             = var.private_subnet_ids
   sync_image                     = true
   sync_source_repo               = "champtitles/terraform-aws-rabbitmq-lambda"
-  ecr_name                       = "terraform-aws-rabbitmq-lambda-${random_id.this[0].hex}"
-  ecr_tag                        = module.hash[0].hash
+  ecr_name                       = try("terraform-aws-rabbitmq-lambda-${random_id.this[0].hex}", "")
+  ecr_tag                        = module.hash.hash
   reserved_concurrent_executions = var.reserved_concurrent_executions
   environment = {
     RABBITMQ_HOST         = var.rabbitmq_host
