@@ -1,7 +1,7 @@
 attrs==24.2.0
 aws-lambda-powertools==3.2.0
-boto3==1.35.49
-botocore==1.35.49
+boto3==1.35.53
+botocore==1.35.53
 click==8.1.7
 coverage==7.6.4
 eradicate==2.3.0
@@ -43,6 +43,6 @@ six==1.16.0
 snowballstemmer==2.2.0
 sqlparse==0.5.1
 tomli==2.0.2
-tryceratops==2.4.0
+tryceratops==2.4.1
 typing_extensions==4.12.2
 urllib3==2.2.3
