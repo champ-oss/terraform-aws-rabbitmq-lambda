@@ -33,7 +33,7 @@ variable "enabled" {
 }
 
 module "rabbit" {
-  source                   = "github.com/champ-oss/terraform-aws-mq.git?ref=v1.0.65-8ede199"
+  source                   = "github.com/champ-oss/terraform-aws-mq.git?ref=v1.0.66-ee4b8e3"
   enabled                  = var.enabled
   git                      = local.git
   vpc_id                   = data.aws_vpcs.this.ids[0]
