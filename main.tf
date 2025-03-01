@@ -22,7 +22,7 @@ module "hash" {
 }
 
 module "this" {
-  source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.152-8f7c4c8"
+  source                         = "github.com/champ-oss/terraform-aws-lambda.git?ref=v1.0.153-c724020"
   enabled                        = var.enabled
   git                            = var.git
   name                           = "rabbitmq-lambda"
