@@ -9,6 +9,7 @@ test:
 	coverage run -m pytest
 
 lint:
+	pip install --upgrade setuptools
 	pip install flake8
 	cd src && flake8 . --count --max-complexity=12 --max-line-length=127 --statistics --exclude venv
 
